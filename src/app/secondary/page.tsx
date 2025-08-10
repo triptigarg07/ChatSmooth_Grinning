@@ -12,16 +12,16 @@ const cloudsBg: React.CSSProperties = {
   overflow: "hidden",
 };
 
-export default function Home() {
+export default function Secondary() {
   return (
     <main className="min-h-[120vh] relative overflow-hidden">
       <Head>
-        <title>Home – SmoothChat</title>
+        <title>Secondary Page – SmoothChat</title>
         <meta
           name="description"
-          content="Home page with a prominent bottom chat input and visible chat history."
+          content="Wider content layout with a docked, persistent chatbox."
         />
-        <link rel="canonical" href="/" />
+        <link rel="canonical" href="/secondary" />
       </Head>
       <div style={cloudsBg}>
         <svg
@@ -36,7 +36,7 @@ export default function Home() {
           <ellipse cx="500" cy="90" rx="50" ry="15" fill="#fff" opacity="0.5" />
         </svg>
       </div>
-      <h1 className="sr-only">Home – SmoothChat</h1>
+      <h1 className="sr-only">Secondary Page – SmoothChat</h1>
     </main>
   );
 }
