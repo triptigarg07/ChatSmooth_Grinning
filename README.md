@@ -40,6 +40,10 @@ A modern, animated chat UI built with Next.js, Tailwind CSS, and Framer Motion.
    ```
 3. Open [http://localhost:8080](http://localhost:8080) in your browser.
 
+## Deployed on vercel
+
+Depolyment: [Link](https://chat-smooth-grinning-mq8j.vercel.app/)
+
 ## Why Tailwind CSS?
 
 - Utility-first for rapid UI development
