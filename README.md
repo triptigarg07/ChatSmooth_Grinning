@@ -57,5 +57,3 @@ Depolyment: [Link](https://chat-smooth-grinning-mq8j.vercel.app/)
 - Integrates seamlessly with React and Next.js
 
 ---
-
-Feel free to customize the UI, add more features, or swap out the tech stack as needed for your use case!
