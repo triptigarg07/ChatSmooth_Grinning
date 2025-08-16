@@ -135,16 +135,16 @@ export const ChatDock: React.FC = () => {
 
   const containerClasses = useMemo(() => {
     if (minimized && isSecondary) {
-      return "fixed right-4 bottom-4 z-50";
+      return "fixed right-2 bottom-2 z-50 sm:right-4 sm:bottom-4";
     }
     return isHomeVisual
-      ? "fixed left-1/2 -translate-x-1/2 bottom-4 w-[min(92vw,64rem)] h-[80vh] z-50"
-      : "fixed right-4 bottom-4 w-[22rem] h-[68vh] md:right-6 md:bottom-6 z-50";
+      ? "fixed inset-x-0 bottom-0 w-full h-[90vh] z-50 sm:left-1/2 sm:-translate-x-1/2 sm:bottom-4 sm:w-[min(92vw,64rem)] sm:h-[80vh]"
+      : "fixed right-2 bottom-2 w-full h-[70vh] z-50 sm:right-4 sm:bottom-4 sm:w-[22rem] sm:h-[68vh] md:right-6 md:bottom-6";
   }, [isHomeVisual, minimized, isSecondary]);
 
   const cloudsBg: React.CSSProperties = {
     background: "linear-gradient(to bottom, #e0f2fe 0%, #f8fafc 100%)",
-    position: "absolute" as React.CSSProperties["position"],
+    position: "absolute",
     inset: 0,
     zIndex: 0,
     borderRadius: isHomeVisual ? 24 : 18,
@@ -158,14 +158,7 @@ export const ChatDock: React.FC = () => {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0, opacity: 0 }}
         transition={{ type: "spring", stiffness: 380, damping: 36 }}
-        className={containerClasses}
-        style={{
-          background: "rgba(255,255,255,0.85)",
-          borderRadius: 9999,
-          boxShadow: "0 2px 16px 0 #0001",
-          padding: 12,
-          border: "1px solid #e5e7eb",
-        }}
+        className={`${containerClasses} chatdock-bg`}
         aria-label="Expand chat dock"
         onClick={() => setMinimized(false)}
       >
@@ -178,7 +171,7 @@ export const ChatDock: React.FC = () => {
     <motion.div
       layout
       onLayoutAnimationComplete={onLayoutComplete}
-      className={containerClasses}
+      className={`${containerClasses} chatdock-bg-transparent rounded-none sm:rounded-2xl`}
       transition={{
         type: "spring",
         stiffness: 300,
@@ -186,7 +179,6 @@ export const ChatDock: React.FC = () => {
         mass: 0.8,
       }}
       aria-label="Chat dock container"
-      style={{ background: "transparent" }}
       key={`chat-dock-${isHomeVisual ? "home" : "secondary"}`}
     >
       <div style={cloudsBg}>
@@ -203,7 +195,7 @@ export const ChatDock: React.FC = () => {
         </svg>
       </div>
       <Card
-        className="h-full bg-transparent border-none shadow-xl relative"
+  className="h-full bg-transparent border-none shadow-xl relative rounded-none sm:rounded-2xl"
         style={{ zIndex: 2 }}
       >
         <AnimatePresence mode="wait">
@@ -242,7 +234,7 @@ export const ChatDock: React.FC = () => {
               )}
 
               <div
-                className="flex-1 overflow-y-auto p-4 space-y-3"
+                className="flex-1 overflow-y-auto p-2 space-y-2 sm:p-4 sm:space-y-3"
                 style={{ zIndex: 2 }}
               >
                 <div className="space-y-3">
@@ -250,7 +242,7 @@ export const ChatDock: React.FC = () => {
                     (m) => (
                       <div
                         key={m.id}
-                        className={`max-w-[85%] rounded-xl px-3 py-2 text-sm border shadow-sm ${
+                        className={`max-w-full sm:max-w-[85%] rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-2 text-xs sm:text-sm border shadow-sm ${
                           m.sender === "user"
                             ? "ml-auto bg-white text-gray-800"
                             : "mr-auto bg-[#e0f2fe] text-gray-800"
@@ -270,17 +262,17 @@ export const ChatDock: React.FC = () => {
                     e.preventDefault();
                     send();
                   }}
-                  className="flex flex-col gap-3"
+                  className="flex flex-col gap-2 sm:gap-3"
                 >
                   <Textarea
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     placeholder="Please type your message"
                     aria-label="Chat message input"
-                    className="min-h-[120px] resize-none bg-white text-gray-800 placeholder:text-gray-500"
+                    className="min-h-[80px] sm:min-h-[120px] resize-none bg-white text-gray-800 placeholder:text-gray-500 text-xs sm:text-sm"
                   />
                   <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-2 text-muted-foreground">
+                    <div className="flex items-center gap-1 sm:gap-2 text-muted-foreground">
                       <button
                         type="button"
                         aria-label="Add attachment"
@@ -344,7 +336,7 @@ export const ChatDock: React.FC = () => {
                     <Button
                       type="submit"
                       size="sm"
-                      className="shrink-0 bg-[#ffcc80] text-gray-800 hover:bg-[#ffbb66]"
+                      className="shrink-0 bg-[#ffcc80] text-gray-800 hover:bg-[#ffbb66] text-xs sm:text-sm px-2 sm:px-4"
                     >
                       <SendIcon size={16} className="mr-1" /> Send
                     </Button>
