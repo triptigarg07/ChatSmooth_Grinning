@@ -11,6 +11,42 @@ A modern, animated chat UI built with Next.js, Tailwind CSS, and Framer Motion.
 - **State Management:** React Context (for chat state)
 - **TypeScript:** Full type safety
 
+# Folder Structure
+
+```
+chatsmooth/
+│
+├── ChatSmooth_Grinning/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── chat/
+│   │   │   │   ├── ChatDock.tsx
+│   │   │   │   ├── ChatMessages.tsx
+│   │   │   │   ├── dummymessage.ts
+│   │   │   │   ├── ChatHeader/
+│   │   │   │   │   └── ChatHeader.tsx
+│   │   │   │   ├── ChatBackground/
+│   │   │   │   │   └── ChatBackground.tsx
+│   │   │   │   ├── ChatToggleButton.tsx
+│   │   │   │   ├── input/
+│   │   │   │   │   └── input.tsx
+│   │   │   ├── ui/
+│   │   │   │   ├── card.tsx
+│   │   │   │   ├── button.tsx
+│   │   │   │   ├── textarea.tsx
+│   │   │   │   ├── select.tsx
+│   │   ├── lib/
+│   │   │   └── utils.ts
+│   │   ├── hooks/
+│   │   │   └── use-mobile.ts
+│   │   ├── styles/
+│   │   │   └── globals.css
+│   │   └── pages/
+│   │       └── index.tsx
+│   └── README.md
+└── ...
+```
+
 ## Features
 
 - Animated chat dock that morphs between a full-width bottom bar (Home) and a compact sidebar (Secondary page)

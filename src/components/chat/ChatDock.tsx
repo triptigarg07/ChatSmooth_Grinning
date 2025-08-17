@@ -5,24 +5,12 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ChatInput } from "./input/input";
 import { useChat } from "./ChatProvider";
-import {
-  X,
-  Smile,
-  Paperclip,
-  Mic,
-  SendIcon,
-  MessageCircle,
-} from "lucide-react";
+import { dummyMessages } from "./dummymessage";
+import { ChatHeader } from "./ChatHeader/ChatHeader";
+import { ChatBackground } from "./ChatBackground/ChatBackground";
+import { ChatToggleButton } from "./ChatToggleButton";
 
 const fadeVariants = {
   hidden: { opacity: 0, y: 4 },
@@ -31,24 +19,6 @@ const fadeVariants = {
 };
 
 export const ChatDock: React.FC = () => {
-  const dummyMessages = [
-    {
-      id: 1,
-      sender: "system",
-      text: "Here are your matches for the day!\n\nAs you can see, all of these were posted just over a few days ago and they fit your strengths perfectly. SpaceX has been hiring pretty frequently so do be on the look out for their new opportunities.\n\nLet me know if you'd like me to do anything else for you, or would you like to direct you to your assigned career counselor if you need any further help!",
-    },
-    {
-      id: 2,
-      sender: "user",
-      text: "Hey Felix, thank you so much for getting me these matches. I have a few questions about them. From my resume, can you please tell me which of these matches really fit the skills that I have, particularly when it comes to developing software for GNC controllers? I'd also really appreciate it if you could break down those descriptions for me and summarize them!",
-    },
-    {
-      id: 3,
-      sender: "system",
-      text: "Definitely!\n\nYour resume mentions you using Python and Matlab to design control systems for GNC and suitable controls for launch vehicles. You have also mentioned doing projects where you used Monte-Carlo simulation methods to generate random wind data and conducting course correction.\n\nFrom these particular skills, jobs posted by SpaceX fit the most. They have also been hiring quite actively for multiple ongoing projects.\n\nThere are also roles from Protingent that fit your skills very well. Let me break these down for you:",
-    },
-  ];
-
   const { input, setInput, send } = useChat();
   const messages = dummyMessages;
 
@@ -135,35 +105,19 @@ export const ChatDock: React.FC = () => {
 
   const containerClasses = useMemo(() => {
     if (minimized && isSecondary) {
-      return "fixed right-2 bottom-2 z-50 sm:right-4 sm:bottom-4";
+      return "fixed right-4 bottom-4 z-50";
     }
     return isHomeVisual
-      ? "fixed inset-x-0 bottom-0 w-full h-[90vh] z-50 sm:left-1/2 sm:-translate-x-1/2 sm:bottom-4 sm:w-[min(92vw,64rem)] sm:h-[80vh]"
-      : "fixed right-2 bottom-2 w-full h-[70vh] z-50 sm:right-4 sm:bottom-4 sm:w-[22rem] sm:h-[68vh] md:right-6 md:bottom-6";
+      ? "fixed left-1/2 -translate-x-1/2 bottom-4 w-[min(92vw,64rem)] h-[80vh] z-50"
+      : "fixed right-4 bottom-4 w-[22rem] h-[68vh] md:right-6 md:bottom-6 z-50";
   }, [isHomeVisual, minimized, isSecondary]);
-
-  const cloudsBg: React.CSSProperties = {
-    background: "linear-gradient(to bottom, #e0f2fe 0%, #f8fafc 100%)",
-    position: "absolute",
-    inset: 0,
-    zIndex: 0,
-    borderRadius: isHomeVisual ? 24 : 18,
-    overflow: "hidden",
-  };
 
   if (minimized && isSecondary) {
     return (
-      <motion.button
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0, opacity: 0 }}
-        transition={{ type: "spring", stiffness: 380, damping: 36 }}
-        className={`${containerClasses} chatdock-bg`}
-        aria-label="Expand chat dock"
-        onClick={() => setMinimized(false)}
-      >
-        <MessageCircle size={32} color="#64748b" />
-      </motion.button>
+      <ChatToggleButton
+        className={containerClasses}
+        onExpand={() => setMinimized(false)}
+      />
     );
   }
 
@@ -171,7 +125,7 @@ export const ChatDock: React.FC = () => {
     <motion.div
       layout
       onLayoutAnimationComplete={onLayoutComplete}
-      className={`${containerClasses} chatdock-bg-transparent rounded-none sm:rounded-2xl`}
+      className={`${containerClasses} chatdock-bg-transparent`}
       transition={{
         type: "spring",
         stiffness: 300,
@@ -181,21 +135,9 @@ export const ChatDock: React.FC = () => {
       aria-label="Chat dock container"
       key={`chat-dock-${isHomeVisual ? "home" : "secondary"}`}
     >
-      <div style={cloudsBg}>
-        <svg
-          width="100%"
-          height="100%"
-          viewBox="0 0 600 300"
-          style={{ position: "absolute", top: 0, left: 0, zIndex: 1 }}
-        >
-          <ellipse cx="120" cy="60" rx="60" ry="18" fill="#fff" />
-          <ellipse cx="200" cy="80" rx="40" ry="12" fill="#fff" />
-          <ellipse cx="400" cy="50" rx="70" ry="20" fill="#fff" />
-          <ellipse cx="500" cy="90" rx="50" ry="15" fill="#fff" />
-        </svg>
-      </div>
+      <ChatBackground isHomeVisual={isHomeVisual} />
       <Card
-  className="h-full bg-transparent border-none shadow-xl relative rounded-none sm:rounded-2xl"
+        className="h-full bg-transparent border-none shadow-xl relative"
         style={{ zIndex: 2 }}
       >
         <AnimatePresence mode="wait">
@@ -213,28 +155,15 @@ export const ChatDock: React.FC = () => {
               className="flex flex-col h-full"
             >
               {!isHomeVisual && (
-                <div className="px-4 py-2 border-b border-gray-200 flex items-center justify-between">
-                  <div className="font-medium text-sm text-gray-800">Chat</div>
-                  <div className="flex items-center gap-3">
-                    <div className="text-xs text-gray-600">
-                      {messages.length} messages
-                    </div>
-                    <button
-                      aria-label={isSecondary ? "Minimize chat" : "Close chat"}
-                      className="text-gray-800 hover:opacity-80"
-                      style={{ marginLeft: 2 }}
-                      onClick={
-                        isSecondary ? () => setMinimized(true) : undefined
-                      }
-                    >
-                      <X size={16} />
-                    </button>
-                  </div>
-                </div>
+                <ChatHeader
+                  isSecondary={isSecondary}
+                  count={messages.length}
+                  onMinimize={() => setMinimized(true)}
+                />
               )}
 
               <div
-                className="flex-1 overflow-y-auto p-2 space-y-2 sm:p-4 sm:space-y-3"
+                className="flex-1 overflow-y-auto p-4 space-y-3"
                 style={{ zIndex: 2 }}
               >
                 <div className="space-y-3">
@@ -242,7 +171,7 @@ export const ChatDock: React.FC = () => {
                     (m) => (
                       <div
                         key={m.id}
-                        className={`max-w-full sm:max-w-[85%] rounded-lg sm:rounded-xl px-2 py-2 sm:px-3 sm:py-2 text-xs sm:text-sm border shadow-sm ${
+                        className={`max-w-[85%] rounded-xl px-3 py-2 text-sm border shadow-sm ${
                           m.sender === "user"
                             ? "ml-auto bg-white text-gray-800"
                             : "mr-auto bg-[#e0f2fe] text-gray-800"
@@ -256,93 +185,7 @@ export const ChatDock: React.FC = () => {
                 </div>
               </div>
 
-              <div className="p-3 bg-[#e0f2fe] rounded-b-xl">
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    send();
-                  }}
-                  className="flex flex-col gap-2 sm:gap-3"
-                >
-                  <Textarea
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Please type your message"
-                    aria-label="Chat message input"
-                    className="min-h-[80px] sm:min-h-[120px] resize-none bg-white text-gray-800 placeholder:text-gray-500 text-xs sm:text-sm"
-                  />
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-1 sm:gap-2 text-muted-foreground">
-                      <button
-                        type="button"
-                        aria-label="Add attachment"
-                        className="hover:opacity-80 text-gray-600"
-                      >
-                        <Paperclip size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="Add emoji"
-                        className="hover:opacity-80 text-gray-600"
-                      >
-                        <Smile size={16} />
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="Record voice"
-                        className="hover:opacity-80 text-gray-600"
-                      >
-                        <Mic size={16} />
-                      </button>
-                    </div>
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 flex-1 max-w-[60%]">
-                      <Select>
-                        <SelectTrigger className="h-8 text-xs bg-white text-gray-800 [&>span]:text-gray-800 [&>svg]:text-gray-800">
-                          <SelectValue placeholder="Option 1" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white text-gray-800">
-                          <SelectItem value="a">A</SelectItem>
-                          <SelectItem value="b">B</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Select>
-                        <SelectTrigger className="h-8 text-xs bg-white text-gray-800 [&>span]:text-gray-800 [&>svg]:text-gray-800">
-                          <SelectValue placeholder="Option 2" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white text-gray-800">
-                          <SelectItem value="a">A</SelectItem>
-                          <SelectItem value="b">B</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Select>
-                        <SelectTrigger className="h-8 text-xs bg-white text-gray-800 [&>span]:text-gray-800 [&>svg]:text-gray-800">
-                          <SelectValue placeholder="Option 3" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white text-gray-800">
-                          <SelectItem value="a">A</SelectItem>
-                          <SelectItem value="b">B</SelectItem>
-                        </SelectContent>
-                      </Select>
-                      <Select>
-                        <SelectTrigger className="h-8 text-xs bg-white text-gray-800 [&>span]:text-gray-800 [&>svg]:text-gray-800">
-                          <SelectValue placeholder="Option 4" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white text-gray-800">
-                          <SelectItem value="a">A</SelectItem>
-                          <SelectItem value="b">B</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <Button
-                      type="submit"
-                      size="sm"
-                      className="shrink-0 bg-[#ffcc80] text-gray-800 hover:bg-[#ffbb66] text-xs sm:text-sm px-2 sm:px-4"
-                    >
-                      <SendIcon size={16} className="mr-1" /> Send
-                    </Button>
-                  </div>
-                </form>
-              </div>
+              <ChatInput input={input} setInput={setInput} send={send} />
             </motion.div>
           )}
         </AnimatePresence>
