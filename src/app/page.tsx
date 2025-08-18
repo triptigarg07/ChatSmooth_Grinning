@@ -1,6 +1,5 @@
 "use client";
 import Head from "next/head";
-import React from "react";
 import { ChatBackground } from "@/components/ui/background";
 import { useChat } from "@/components/chat/ChatProvider";
 import { dummyMessages } from "@/components/chat/dummymessage";
