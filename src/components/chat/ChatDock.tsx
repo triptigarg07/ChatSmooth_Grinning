@@ -9,7 +9,6 @@ import { ChatInput } from "./input/input";
 import { useChat } from "./ChatProvider";
 import { dummyMessages } from "./dummymessage";
 import { ChatHeader } from "./ChatHeader/ChatHeader";
-import { ChatBackground } from "./ChatBackground/ChatBackground";
 import { ChatToggleButton } from "./ChatToggleButton";
 
 const fadeVariants = {
@@ -135,7 +134,6 @@ export const ChatDock: React.FC = () => {
       aria-label="Chat dock container"
       key={`chat-dock-${isHomeVisual ? "home" : "secondary"}`}
     >
-      <ChatBackground isHomeVisual={isHomeVisual} />
       <Card
         className="h-full bg-transparent border-none shadow-xl relative"
         style={{ zIndex: 2 }}
@@ -184,7 +182,6 @@ export const ChatDock: React.FC = () => {
                   )}
                 </div>
               </div>
-
               <ChatInput input={input} setInput={setInput} send={send} />
             </motion.div>
           )}

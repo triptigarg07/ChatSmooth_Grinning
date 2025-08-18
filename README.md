@@ -18,32 +18,36 @@ chatsmooth/
 │
 ├── ChatSmooth_Grinning/
 │   ├── src/
+|   |   |──app/
+|   |   |   ├──secondary/
+|   |   |   |  ├── page.tsx
+|   |   |   |──global.css
+|   |   |   |──layout.tsx
+|   |   |   |──page.tsx
 │   │   ├── components/
 │   │   │   ├── chat/
 │   │   │   │   ├── ChatDock.tsx
 │   │   │   │   ├── ChatMessages.tsx
 │   │   │   │   ├── dummymessage.ts
+│   │   │   │   ├── ChatProvider.tsx
 │   │   │   │   ├── ChatHeader/
 │   │   │   │   │   └── ChatHeader.tsx
-│   │   │   │   ├── ChatBackground/
-│   │   │   │   │   └── ChatBackground.tsx
 │   │   │   │   ├── ChatToggleButton.tsx
 │   │   │   │   ├── input/
 │   │   │   │   │   └── input.tsx
+|   |   |   ├── layout/
+│   │   │   │   ├── SidebarRail.tsx
 │   │   │   ├── ui/
 │   │   │   │   ├── card.tsx
 │   │   │   │   ├── button.tsx
 │   │   │   │   ├── textarea.tsx
 │   │   │   │   ├── select.tsx
+│   │   │   │   └── background.tsx
 │   │   ├── lib/
 │   │   │   └── utils.ts
-│   │   ├── hooks/
-│   │   │   └── use-mobile.ts
-│   │   ├── styles/
-│   │   │   └── globals.css
-│   │   └── pages/
-│   │       └── index.tsx
-│   └── README.md
+│   │
+│   │──README.md
+│
 └── ...
 ```
 

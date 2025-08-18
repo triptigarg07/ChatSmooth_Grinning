@@ -1,4 +1,3 @@
-// ChatHeader.tsx
 import { X } from "lucide-react";
 
 interface ChatHeaderProps {

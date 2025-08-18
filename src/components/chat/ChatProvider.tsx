@@ -12,7 +12,7 @@ import {
 export type ChatMessage = {
   id: string;
   text: string;
-  sender: "user" | "assistant";
+  sender: "user" | "system";
   createdAt: number;
 };
 
@@ -76,7 +76,7 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
         {
           id: genId(),
           text: `Echo: ${trimmed}`,
-          sender: "assistant",
+          sender: "system",
           createdAt: Date.now(),
         },
       ]);
