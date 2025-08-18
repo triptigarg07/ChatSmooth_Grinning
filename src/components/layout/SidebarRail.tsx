@@ -20,8 +20,8 @@ const SidebarRail = () => {
       key={label}
       href={to}
       aria-label={label}
-      className={`flex h-10 w-10 items-center justify-center rounded-lg border bg-card transition-colors hover:bg-accent/60 ${
-        isActive(to) ? "text-primary" : "text-gray-700"
+      className={`flex h-10 w-10 items-center justify-center rounded-lg bg-card transition-colors hover:bg-accent/60 ${
+        isActive(to) ? "text-black" : "text-gray-500"
       }`}
     >
       {icon}
@@ -29,7 +29,7 @@ const SidebarRail = () => {
   );
 
   return (
-    <aside className="fixed left-3 top-0 bottom-0 z-40 flex flex-col items-center justify-between pt-4 pb-4 bg-white">
+    <aside className="fixed left-0 inset-y-0 z-40 flex flex-col items-center justify-between pt-4 pb-4 bg-white">
       {/* Top icons */}
       <div className="flex flex-col items-center gap-3">
         {item("/", <Home size={20} />, "Home")}

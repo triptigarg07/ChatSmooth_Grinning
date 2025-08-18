@@ -2,6 +2,7 @@
 import Head from "next/head";
 import React from "react";
 import { ChatBackground } from "@/components/ui/background";
+import { ChatDock } from "@/components/chat/ChatDock";
 
 export default function Secondary() {
   return (

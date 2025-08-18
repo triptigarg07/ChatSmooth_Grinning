@@ -18,7 +18,13 @@ export const ChatToggleButton: React.FC<ChatToggleButtonProps> = ({
       initial={{ scale: 0, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       exit={{ scale: 0, opacity: 0 }}
-      transition={{ type: "spring", stiffness: 380, damping: 36 }}
+      transition={{
+        type: "spring",
+        stiffness: 380,
+        damping: 36,
+        duration: 0.9,
+        ease: [0.4, 0.0, 0.2, 1],
+      }}
       className={`${className} chatdock-bg`}
       aria-label="Expand chat dock"
       onClick={onExpand}
