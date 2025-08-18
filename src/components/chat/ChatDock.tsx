@@ -111,6 +111,10 @@ export const ChatDock: React.FC = () => {
       : "fixed right-4 bottom-4 w-[45rem] h-[68vh] md:right-6 md:bottom-6 z-50";
   }, [isHomeVisual, minimized, isSecondary]);
 
+  if (isHomeVisual) {
+    return null;
+  }
+
   if (minimized && isSecondary) {
     return (
       <ChatToggleButton
@@ -172,7 +176,7 @@ export const ChatDock: React.FC = () => {
                         className={`max-w-[85%] rounded-xl px-3 py-2 text-sm border shadow-sm ${
                           m.sender === "user"
                             ? "ml-auto bg-white text-gray-800"
-                            : "mr-auto bg-[#e0f2fe] text-gray-800"
+                            : "mr-auto bg-blue-100 text-gray-800"
                         }`}
                         style={{ whiteSpace: "pre-line" }}
                       >

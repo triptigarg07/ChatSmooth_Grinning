@@ -1,39 +1,62 @@
 "use client";
-import Head from "next/head";
+
+import { ChatInput } from "@/components/chat/input/input";
 import { ChatBackground } from "@/components/ui/background";
-import { useChat } from "@/components/chat/ChatProvider";
-import { dummyMessages } from "@/components/chat/dummymessage";
+import React, { useState } from "react";
 
 export default function Home() {
-  const { messages, input, setInput, send } = useChat();
+  const [input, setInput] = useState("");
+
+  const send = () => {
+    if (!input.trim()) return;
+    console.log("Sending message:", input);
+    setInput("");
+  };
+  const dummyMessages = [
+    {
+      id: "1",
+      sender: "system",
+      text: `Here are your matches for the day!
+      
+As you can see, all of these were posted just over a few days ago and they fit your strengths perfectly.`,
+    },
+    {
+      id: "2",
+      sender: "user",
+      text: `Hey Felix, thank you so much for getting me these matches. I have a few questions about them.`,
+    },
+    {
+      id: "3",
+      sender: "system",
+      text: `Definitely! Your resume mentions Python and Matlab for GNC systems.`,
+    },
+  ];
+
   return (
-    <main className="min-h-[120vh] relative overflow-hidden">
-      <Head>
-        <title>Home – SmoothChat</title>
-        <meta
-          name="description"
-          content="Home page with a prominent bottom chat input and visible chat history."
-        />
-        <link rel="canonical" href="/" />
-      </Head>
-      <div className="space-y-3 max-w-xl mx-auto mb-20">
-        {(messages.length === 0 ? dummyMessages : messages).map((m) => (
+    <main className="min-h-screen flex flex-col bg-gray-100">
+      <ChatBackground />
+      <div className="flex-1 overflow-y-auto space-y-4 p-4 relative z-10">
+        {dummyMessages.map((message) => (
           <div
-            key={m.id}
-            className={`max-w-[85%] rounded-xl px-3 py-2 text-sm border shadow-sm ${
-              m.sender === "user"
-                ? "ml-auto bg-white text-gray-800"
-                : "mr-auto bg-[#e0f2fe] text-gray-800"
+            key={message.id}
+            className={`max-w-[30%] rounded-xl px-4 py-3 text-sm border shadow-sm ${
+              message.sender === "user"
+                ? "ml-auto mr-10 bg-white text-gray-800 border-gray-300"
+                : "mr-auto ml-10 bg-blue-100 text-gray-800 border-blue-200"
             }`}
             style={{ whiteSpace: "pre-line" }}
           >
-            {m.text}
+            {message.text}
           </div>
         ))}
       </div>
-
-      <ChatBackground />
-      <h1 className="sr-only">Home – SmoothChat</h1>
+      <div className="fixed bottom-0 left-[4rem] right-0 border-t border-chat-border bg-chat-input/80 backdrop-blur-md z-30">
+        {" "}
+        <div className="max-w-4xl mx-auto px-4 py-3">
+          {" "}
+          <ChatInput input={input} setInput={setInput} send={send} />{" "}
+        </div>{" "}
+      </div>
     </main>
   );
 }

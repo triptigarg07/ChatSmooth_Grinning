@@ -1,42 +1,29 @@
 "use client";
-import type React from "react";
-import {
-  createContext,
-  useContext,
-  useMemo,
-  useState,
-  useCallback,
-  useEffect,
-} from "react";
+
+import { createContext, useContext, useEffect, useState } from "react";
+import { dummyMessages } from "./dummymessage";
 
 export type ChatMessage = {
   id: string;
+  sender: "system" | "user";
   text: string;
-  sender: "user" | "system";
   createdAt: number;
 };
 
-export type ChatContextType = {
+type ChatContextType = {
   messages: ChatMessage[];
   input: string;
-  setInput: (v: string) => void;
+  setInput: (val: string) => void;
   send: () => void;
-  clear: () => void;
 };
 
-const ChatContext = createContext<ChatContextType | null>(null);
+const ChatContext = createContext<ChatContextType | undefined>(undefined);
 
-function genId() {
-  return Math.random().toString(36).slice(2);
-}
-
-export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
+export function ChatProvider({ children }: { children: React.ReactNode }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
 
-  // optional: persist across reloads for a nicer demo
+  // 🔹 Load from localStorage or fallback to dummyMessages
   useEffect(() => {
     try {
       const raw = localStorage.getItem("chat-state");
@@ -45,56 +32,64 @@ export const ChatProvider: React.FC<{ children: React.ReactNode }> = ({
           messages: ChatMessage[];
           input: string;
         };
-        setMessages(parsed.messages ?? []);
+
+        // only set messages if storage has non-empty, otherwise use dummy
+        setMessages(
+          parsed.messages && parsed.messages.length > 0
+            ? parsed.messages
+            : dummyMessages
+        );
         setInput(parsed.input ?? "");
+      } else {
+        setMessages(dummyMessages);
       }
-    } catch {}
+    } catch {
+      setMessages(dummyMessages);
+    }
   }, []);
 
+  // 🔹 Save to localStorage when messages/input change
   useEffect(() => {
-    try {
-      localStorage.setItem("chat-state", JSON.stringify({ messages, input }));
-    } catch {}
+    localStorage.setItem("chat-state", JSON.stringify({ messages, input }));
   }, [messages, input]);
 
-  const send = useCallback(() => {
-    const trimmed = input.trim();
-    if (!trimmed) return;
-    const userMsg: ChatMessage = {
-      id: genId(),
-      text: trimmed,
+  // 🔹 Send a new user message
+  const send = () => {
+    if (!input.trim()) return;
+
+    const newMessage: ChatMessage = {
+      id: Date.now().toString(),
       sender: "user",
+      text: input,
       createdAt: Date.now(),
     };
-    setMessages((prev) => [...prev, userMsg]);
+
+    setMessages((prev) => [...prev, newMessage]);
     setInput("");
 
-    // playful echo assistant
+    // Example: echo system reply (replace with API later)
     setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: genId(),
-          text: `Echo: ${trimmed}`,
-          sender: "system",
-          createdAt: Date.now(),
-        },
-      ]);
-    }, 400);
-  }, [input]);
+      const reply: ChatMessage = {
+        id: (Date.now() + 1).toString(),
+        sender: "system",
+        text: "Got it! I’ll process your request 👍",
+        createdAt: Date.now(),
+      };
+      setMessages((prev) => [...prev, reply]);
+    }, 800);
+  };
 
-  const clear = useCallback(() => setMessages([]), []);
-
-  const value = useMemo(
-    () => ({ messages, input, setInput, send, clear }),
-    [messages, input, send, clear]
+  return (
+    <ChatContext.Provider value={{ messages, input, setInput, send }}>
+      {children}
+    </ChatContext.Provider>
   );
+}
 
-  return <ChatContext.Provider value={value}>{children}</ChatContext.Provider>;
-};
-
-export const useChat = () => {
+export function useChat() {
   const ctx = useContext(ChatContext);
-  if (!ctx) throw new Error("useChat must be used within ChatProvider");
+  if (!ctx) {
+    throw new Error("useChat must be used inside a ChatProvider");
+  }
   return ctx;
-};
+}
