@@ -28,28 +28,22 @@ export const ChatDock: React.FC = () => {
   const isSecondary = pathname === "/secondary";
 
   const [minimized, setMinimized] = useState(false);
-
   const [isHomeVisual, setIsHomeVisual] = useState<boolean>(targetIsHome);
   const [contentVisible, setContentVisible] = useState<boolean>(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => {
-    if (!isSecondary) {
-      setMinimized(false);
-    }
+    if (!isSecondary) setMinimized(false);
   }, [isSecondary]);
 
   useEffect(() => {
     if (targetIsHome) {
       setMinimized(false);
-
       if (!isHomeVisual) {
         setIsTransitioning(true);
         if (!prefersReducedMotion) {
           setContentVisible(false);
-          const fadeOutTimer = setTimeout(() => {
-            setIsHomeVisual(true);
-          }, 50);
+          const fadeOutTimer = setTimeout(() => setIsHomeVisual(true), 50);
           return () => clearTimeout(fadeOutTimer);
         } else {
           setIsHomeVisual(true);
@@ -78,16 +72,11 @@ export const ChatDock: React.FC = () => {
 
     setIsTransitioning(true);
     setContentVisible(false);
-
-    const fadeOutTimer = setTimeout(() => {
-      setIsHomeVisual(targetIsHome);
-    }, 50);
-
+    const fadeOutTimer = setTimeout(() => setIsHomeVisual(targetIsHome), 50);
     return () => clearTimeout(fadeOutTimer);
   }, [targetIsHome, isHomeVisual, prefersReducedMotion, contentVisible]);
 
   const layoutDoneRef = useRef(false);
-
   useEffect(() => {
     layoutDoneRef.current = false;
   }, [isHomeVisual]);
@@ -95,7 +84,6 @@ export const ChatDock: React.FC = () => {
   const onLayoutComplete = () => {
     if (layoutDoneRef.current) return;
     layoutDoneRef.current = true;
-
     setTimeout(() => {
       setContentVisible(true);
       setIsTransitioning(false);
@@ -103,38 +91,29 @@ export const ChatDock: React.FC = () => {
   };
 
   const containerClasses = useMemo(() => {
-    if (minimized && isSecondary) {
-      return "fixed right-4 bottom-4 z-50";
-    }
+    if (minimized && isSecondary) return "fixed right-4 bottom-4 z-50";
+
     return isHomeVisual
-      ? "fixed left-1/2 -translate-x-1/2 bottom-4 w-[min(92vw,64rem)] h-[80vh] z-50"
-      : "fixed right-4 bottom-4 w-[45rem] h-[68vh] md:right-6 md:bottom-6 z-50";
+      ? "fixed left-1/2 -translate-x-1/2 bottom-4 w-[92vw] sm:w-[80vw] md:w-[64rem] h-[80vh] z-50"
+      : "fixed right-2 bottom-2 w-[95vw] sm:w-[80vw] md:w-[45rem] h-[70vh] md:h-[68vh] z-50";
   }, [isHomeVisual, minimized, isSecondary]);
 
-  if (isHomeVisual) {
-    return null;
-  }
+  if (isHomeVisual) return null;
 
-  if (minimized && isSecondary) {
+  if (minimized && isSecondary)
     return (
       <ChatToggleButton
         className={containerClasses}
         onExpand={() => setMinimized(false)}
       />
     );
-  }
 
   return (
     <motion.div
       layout
       onLayoutAnimationComplete={onLayoutComplete}
       className={`${containerClasses} chatdock-bg-transparent`}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-        mass: 0.8,
-      }}
+      transition={{ type: "spring", stiffness: 300, damping: 30, mass: 0.8 }}
       aria-label="Chat dock container"
       key={`chat-dock-${isHomeVisual ? "home" : "secondary"}`}
     >
@@ -150,10 +129,7 @@ export const ChatDock: React.FC = () => {
               animate="visible"
               exit="exit"
               variants={fadeVariants}
-              transition={{
-                duration: 0.3,
-                ease: [0.4, 0.0, 0.2, 1],
-              }}
+              transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
               className="flex flex-col h-full"
             >
               {!isHomeVisual && (
@@ -164,28 +140,22 @@ export const ChatDock: React.FC = () => {
                 />
               )}
 
-              <div
-                className="flex-1 overflow-y-auto p-4 space-y-3"
-                style={{ zIndex: 2 }}
-              >
-                <div className="space-y-3">
-                  {(messages.length === 0 ? dummyMessages : messages).map(
-                    (m) => (
-                      <div
-                        key={m.id}
-                        className={`max-w-[85%] rounded-xl px-3 py-2 text-sm border shadow-sm ${
-                          m.sender === "user"
-                            ? "ml-auto bg-white text-gray-800"
-                            : "mr-auto bg-blue-100 text-gray-800"
-                        }`}
-                        style={{ whiteSpace: "pre-line" }}
-                      >
-                        {m.text}
-                      </div>
-                    )
-                  )}
-                </div>
+              <div className="flex-1 overflow-y-auto p-2 sm:p-4 space-y-3">
+                {messages.map((m) => (
+                  <div
+                    key={m.id}
+                    className={`max-w-[85%] rounded-xl px-3 py-2 text-sm border shadow-sm ${
+                      m.sender === "user"
+                        ? "ml-auto bg-white text-gray-800"
+                        : "mr-auto bg-blue-100 text-gray-800"
+                    }`}
+                    style={{ whiteSpace: "pre-line" }}
+                  >
+                    {m.text}
+                  </div>
+                ))}
               </div>
+
               <ChatInput input={input} setInput={setInput} send={send} />
             </motion.div>
           )}
